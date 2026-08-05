@@ -1,6 +1,5 @@
-package com.example.Spring_LevelTest.repository;
+package com.example.Spring_LevelTest.service;
 
-import com.example.Spring_LevelTest.model.Member;
 import java.util.List;
 
 public interface IRepository {
