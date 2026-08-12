@@ -1,21 +1,22 @@
 package com.example.Spring_LevelTest.controller.dto;
 
-import com.example.Spring_LevelTest.service.Member;
+import com.example.Spring_LevelTest.repository.JobType;
+import com.example.Spring_LevelTest.repository.member.Member;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Getter
-@ToString
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class MemberResponseDto {
 
-    private Integer id;
-    private String name;
-    private Integer age;
-    private JobType job;
-    private String email;
+    Integer id;
+    String name;
+    Integer age;
+    JobType job;
+    String email;
 
     public static MemberResponseDto from(Member entity) {
         return new MemberResponseDto(
