@@ -33,14 +33,14 @@ public class MemberRepository implements IRepository<Integer, Member> {
         idGenerator(true);
         int id = this.CURRENT_ID;
 
-        if (Objects.nonNull(members.get(id))) {
+        if (members.containsKey(id)) {
             idGenerator(false);
             throw new RuntimeException("기존에 해당하는 아이디를 가진 엔티티가 존재합니다. : " + (id + 1));
         }
         entity.setId(id);
-        Member created = members.put(id, entity);
+        members.put(id, entity);
 
-        return created;
+        return members.get(id);
     }
 
     @Override
@@ -67,18 +67,15 @@ public class MemberRepository implements IRepository<Integer, Member> {
             throw new RuntimeException("업데이트 하려는 아이디가 존재하지 않습니다.");
         }
 
-        if (Objects.nonNull(entity.getName())) {
-            existMember.setName(entity.getName());
-        }
-        if (Objects.nonNull(entity.getAge())) {
-            existMember.setAge(entity.getAge());
-        }
-        if (Objects.nonNull(entity.getJob())) {
-            existMember.setJob(entity.getJob());
-        }
-        if (Objects.nonNull(entity.getEmail())) {
-            existMember.setEmail(entity.getEmail());
-        }
+        //repository->검증을 안하면 망가질 때 예외 처리
+        existMember.setName(
+            Objects.isNull(entity.getName()) ? existMember.getName() : entity.getName());
+        existMember.setAge(
+            Objects.isNull(entity.getAge()) ? existMember.getAge() : entity.getAge());
+        existMember.setJob(
+            Objects.isNull(entity.getJob()) ? existMember.getJob() : entity.getJob());
+        existMember.setEmail(
+            Objects.isNull(entity.getEmail()) ? existMember.getEmail() : entity.getEmail());
 
         return existMember;
     }

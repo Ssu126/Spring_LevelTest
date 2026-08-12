@@ -15,7 +15,7 @@ public class MemberService {
     private final IRepository<Integer, Member> memberRepository;
 
     public MemberResponseDto create(MemberCreateRequestDto requestDto) {
-        Member member = requestDto.toMember(null);
+        Member member = requestDto.toMember();
         Member createdMember = memberRepository.create(member);
         return MemberResponseDto.from(createdMember);
     }
@@ -32,7 +32,10 @@ public class MemberService {
     }
 
     public MemberResponseDto update(Integer id, MemberCreateRequestDto requestDto) {
-        Member member = requestDto.toMember(id);
+        Member member = memberRepository.read(id);
+        member.update(
+            requestDto.getName(), requestDto.getAge(),
+            requestDto.getJob(), requestDto.getEmail());
         Member updatedMember = memberRepository.update(member);
         return MemberResponseDto.from(updatedMember);
     }

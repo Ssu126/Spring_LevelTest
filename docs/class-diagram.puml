@@ -1,0 +1,94 @@
+@startuml
+title Spring_LevelTest Class Diagram
+
+' Render the package flow horizontally.
+left to right direction
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+' Keep the diagram focused on data and relationships.
+hide methods
+
+package "com.example.Spring_LevelTest" {
+  class SpringLevelTestApplication
+
+  package controller {
+    class MemberController {
+      - memberService: MemberService
+    }
+
+    package dto {
+      class MemberCreateRequestDto {
+        - name: String
+        - age: Integer
+        - job: JobType
+        - email: String
+      }
+
+      class MemberResponseDto {
+        - id: Integer
+        - name: String
+        - age: Integer
+        - job: JobType
+        - email: String
+      }
+    }
+  }
+
+  package service {
+    class MemberService {
+      - memberRepository: IRepository<Integer, Member>
+    }
+  }
+
+  package repository {
+    interface "IRepository<K, T>" as IRepository
+
+    class Human {
+      - id: Integer
+      - name: String
+      - isDeleted: boolean
+    }
+
+    enum JobType {
+      DEVELOPER
+      DESIGNER
+      MARKETER
+      --
+      - description: String
+    }
+
+    package member {
+      class MemberRepository {
+        - members: Map<Integer, Member>
+        - CURRENT_ID: int
+      }
+
+      class Member {
+        - age: Integer
+        - job: JobType
+        - email: String
+      }
+    }
+  }
+}
+
+MemberController --> MemberService
+MemberController ..> MemberCreateRequestDto
+MemberController ..> MemberResponseDto
+MemberController ..> JobType
+
+MemberService --> IRepository
+MemberService ..> MemberCreateRequestDto
+MemberService ..> MemberResponseDto
+
+MemberRepository ..|> IRepository
+MemberRepository "1" o-- "*" Member : members
+Member --|> Human
+Member --> JobType
+MemberCreateRequestDto ..> Member
+MemberCreateRequestDto --> JobType
+MemberResponseDto ..> Member
+MemberResponseDto --> JobType
+@enduml

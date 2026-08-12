@@ -20,7 +20,7 @@ public class MemberCreateRequestDto {
     private JobType job;
     private String email;
 
-    public Member toMember(Integer id) {
-        return new Member(id, this.name, this.age, this.job, this.email);
+    public Member toMember() {
+        return new Member(this.name, this.age, this.job, this.email);
     }
 }

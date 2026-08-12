@@ -78,25 +78,18 @@ public class MemberController {
     @ResponseBody
     public MemberResponseDto updatePartialAPI(
         @PathVariable(name = "id", required = true) Integer id,
-        @RequestParam String name,
-        @RequestParam Integer age,
-        @RequestParam JobType job,
-        @RequestParam String email
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) Integer age,
+        @RequestParam(required = false) JobType job,
+        @RequestParam(required = false) String email
     ) {
+        //service가 검증까지 담당한다.
         MemberResponseDto origin = memberService.read(id);
         MemberCreateRequestDto requestDto = new MemberCreateRequestDto();
-        if (Objects.nonNull(name)) {
-            requestDto.setName(name);
-        }
-        if (Objects.nonNull(age)) {
-            requestDto.setAge(age);
-        }
-        if (Objects.nonNull(job)) {
-            requestDto.setJob(job);
-        }
-        if (Objects.nonNull(email)) {
-            requestDto.setEmail(email);
-        }
+        requestDto.setName(Objects.isNull(name) ? origin.getName() : name);
+        requestDto.setAge(Objects.isNull(age) ? origin.getAge() : age);
+        requestDto.setJob(Objects.isNull(job) ? origin.getJob() : job);
+        requestDto.setEmail(Objects.isNull(email) ? origin.getEmail() : email);
 
         MemberResponseDto responseDto = memberService.update(id, requestDto);
         log.info("API 단일 부분 수정: {}", responseDto);
@@ -108,6 +101,7 @@ public class MemberController {
     public MemberResponseDto updateAllAPI(
         @PathVariable(name = "id", required = true) Integer id,
         @RequestBody @Valid MemberCreateRequestDto requestDto) {
+        //updateDto를 추가해줄 것
         if (Objects.isNull(requestDto.getJob()) || Objects.isNull(requestDto.getEmail())) {
             throw new IllegalArgumentException("모든 필드가 필수 입력값입니다.");
         }
